@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     # 下载每篇文章
     for i in range(num):
-        print("开始下载第"+str(i)+"篇文章")
+        print("开始下载第" + str(i) + "篇文章")
         print(df["title"][i])
         # print(df["link"][i])
 
@@ -106,11 +106,6 @@ if __name__ == '__main__':
         url = df["link"][i]
         htmlStr = DownloadHtml(url)
         htmlStr2 = ChangeImgSrc(htmlStr)
-        savePath = "D:/Raccon/"+title+".html"
+        savePath = "D:/Raccon/" + title + ".html"
         SaveFile(savePath, htmlStr2)
 
-    # url = "https://mp.weixin.qq.com/s?__biz=MjM5MTIwNzg2OQ==&mid=208228982&idx=1&sn=44ca5cd06dfbd34b1d664673d2d025a2&scene=4#wechat_redirect"
-# htmlStr = DownloadHtml(url)
-# htmlStr2 = ChangeImgSrc(htmlStr)
-# savePath = "D:/Raccon/test.html"
-# SaveFile(savePath, htmlStr2)
