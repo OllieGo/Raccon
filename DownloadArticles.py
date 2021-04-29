@@ -27,10 +27,14 @@ def DownloadImg(url, savePath):
 
 
 # 修改网页中图片的src，使图片能正常显示
-def ChangeImgSrc(htmlSource):
+def ChangeImgSrc(htmlSource, SubscriptionName, dirnum=0):
     bs = BeautifulSoup(htmlSource, "lxml")  # 由网页源代码生成BeautifulSoup对象
     imgList = bs.find_all("img")  # 找出网页中所有img标签
     imgIndex = 0  # 图片编号，不同图片要保存为不同名称
+    dirs1 = 'D:\\Raccon\\%s\\images\\%s' % (str(SubscriptionName), str(dirnum))
+    print(dirs1)
+    if not os.path.exists(dirs1):
+        os.makedirs(dirs1)
     for img in imgList:
         imgIndex += 1
         originalUrl = ""  # 定义一个变量保存图片真实url
@@ -50,9 +54,9 @@ def ChangeImgSrc(htmlSource):
             else:
                 imgType = "png"  # 没有扩展名则默认png
             imgName = str(imgIndex) + "." + imgType
-            imgSavePath = "D:/Raccon/images/" + imgName  # 图片保存目录
+            imgSavePath = "D:/Raccon/" + f'{SubscriptionName}/' + "images/" + f'{dirnum}/' + imgName  # 图片保存目录
             DownloadImg(originalUrl, imgSavePath)  # 下载图片
-            img.attrs["src"] = "images/" + imgName  # 网页中图片的相对路径
+            img.attrs["src"] = "images/" + f'{dirnum}/' + imgName  # 网页中图片的相对路径
         else:
             img.attrs["src"] = ""
 
@@ -73,7 +77,7 @@ def DownloadHtml(url):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:  # 返回码为200表示正常返回
         htmltext = response.text  # 网页正文
-        print(htmltext)
+        # print(htmltext)
         return htmltext
     else:
         return None
@@ -81,14 +85,15 @@ def DownloadHtml(url):
 
 if __name__ == '__main__':
 
+    SubscriptionName = "灼识新维度"  # 公众号名称
+    filename = 'D:\\WxArticles\\灼识新维度.csv'
+
     # 判断文件夹是否存在，不存在则创建
-    dirs1 = 'D:\\Raccon\\images'
-    if not os.path.exists(dirs1):
-        os.makedirs(dirs1)
+    dirs2 = 'D:\\Raccon\\%s' % str(SubscriptionName)
+    if not os.path.exists(dirs2):
+        os.makedirs(dirs2)
 
-    filename = './/csv//articles.csv'
-    num = 0;
-
+    num = 0
     with open(filename, 'r', encoding='utf-8') as f:
         num = len(f.readlines()) - 1
         print(num)
@@ -102,10 +107,9 @@ if __name__ == '__main__':
         print(df["title"][i])
         # print(df["link"][i])
 
-        title = df["title"][i]
+        title = df["title"][i].replace('/', '').replace('|', '')
         url = df["link"][i]
         htmlStr = DownloadHtml(url)
-        htmlStr2 = ChangeImgSrc(htmlStr)
-        savePath = "D:/Raccon/" + title + ".html"
+        htmlStr2 = ChangeImgSrc(htmlStr, SubscriptionName, i)
+        savePath = "D:/Raccon/" + f'{SubscriptionName}/' + title + ".html"
         SaveFile(savePath, htmlStr2)
-
