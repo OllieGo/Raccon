@@ -83,10 +83,20 @@ def DownloadHtml(url):
         return None
 
 
+# 从csv文件路径截取文件名
+def splitName(filename):
+    if filename.find('\\') > 0:
+        SubscriptionName = filename.split('\\')[-1].split('.')[0]
+        return SubscriptionName
+    else:
+        return 'test'
+
+
 if __name__ == '__main__':
 
-    SubscriptionName = "灼识新维度"  # 公众号名称
     filename = 'D:\\WxArticles\\灼识新维度.csv'
+
+    SubscriptionName = splitName(filename)
 
     # 判断文件夹是否存在，不存在则创建
     dirs2 = 'D:\\Raccon\\%s' % str(SubscriptionName)
